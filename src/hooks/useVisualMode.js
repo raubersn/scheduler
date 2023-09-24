@@ -12,15 +12,17 @@ const MODE = {
   ERRORDELETE: "ERRORDELETE",
 };
 
-const useVisualMode = (initial) => {
-  const [history, setHistory] = useState([initial || MODE.EMPTY])
+const useVisualMode = (initial = MODE.EMPTY) => {
+  const [history, setHistory] = useState([initial])
   
-  const transition = (newMode) => {
-    setHistory(prev =>[...prev, newMode]);
+  const transition = (newMode, replace = false) => {
+    setHistory(prev =>[...prev.slice(0, prev.length - (replace ? 1 : 0)), newMode]);
   };
 
   const back = () => {
-    setHistory(prev => [...prev.slice(0, prev.length - 1)]);
+    if (history.length > 1) {
+      setHistory(prev => [...prev.slice(0, prev.length - 1)]);  
+    }    
   };
 
   return {
