@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
-const MODE = {
+export const MODES = {
   EMPTY: "EMPTY",
   SHOW: "SHOW",
   CREATE: "CREATE",
   EDIT: "EDIT",
   SAVING: "SAVING",
-  DELETING : "DELETING",
   CONFIRM: "CONFIRM",
+  DELETING : "DELETING",
   ERRORSAVE: "ERRORSAVE",
   ERRORDELETE: "ERRORDELETE",
 };
 
-const useVisualMode = (initial = MODE.EMPTY) => {
+const useVisualMode = (initial = MODES.EMPTY) => {
   const [history, setHistory] = useState([initial])
   
   const transition = (newMode, replace = false) => {
