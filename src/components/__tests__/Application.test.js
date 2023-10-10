@@ -7,7 +7,7 @@ import React from "react";
   We import our helper functions from the react-testing-library
   The render function allows us to render Components
 */
-import { fireEvent, render, waitForElement, getByText, prettyDOM, getAllByTestId, getByAltText, getByPlaceholderText } from "@testing-library/react";
+import { fireEvent, render, waitForElement, getByText, prettyDOM, getAllByTestId, getByAltText, getByPlaceholderText, waitForElementToBeRemoved, queryByText } from "@testing-library/react";
 
 /*
   We import the component that we are testing
@@ -42,7 +42,7 @@ describe("Application", () => {
   });
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
-    const { container } = render(<Application />);
+    const { container, debug } = render(<Application />);
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
     //console.log(prettyDOM(container));
@@ -61,7 +61,19 @@ describe("Application", () => {
 
     fireEvent.click(getByText(appointment, "Save"));
     //console.log(prettyDOM(appointment));
+    //console.log(debug());
+    //expect(getByText(appointment, /saving/i)).toBeInTheDocument();
 
-    expect(getByText(appointment, /saving/i)).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => getByText(appointment, /saving/i));
+    //console.log(prettyDOM(appointment));
+
+    expect(getByText(appointment, "Lydia Miller-Jones")).toBeInTheDocument();
+    //console.log(debug());
+
+    const mondayAppointments = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday"));
+    //console.log(prettyDOM(mondayAppointments));
+    
+    expect(getByText(mondayAppointments, /no spots remaining/i)).toBeInTheDocument();
   });
 });
